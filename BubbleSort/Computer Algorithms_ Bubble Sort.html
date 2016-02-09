@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/ -->
+<html lang="en-US"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Computer Algorithms: Bubble Sort</title>
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="http://www.stoimen.com/blog/xmlrpc.php">
+	<!--[if lt IE 9]>
+	<script src="http://www.stoimen.com/blog/wp-content/themes/twentythirteen/js/html5.js"></script>
+	<![endif]-->
+	
+<!-- All in One SEO Pack 2.2.7.5 by Michael Torbert of Semper Fi Web Design[310,374] -->
+<meta name="description" content="Overview It&#39;s weird that bubble sort is the most famous sorting algorithm in practice since it is one of the worst approaches for data sorting. Why is bubble">
+
+<meta name="keywords" content="bubble sort,discrete mathematics,dom,famous sorting algorithm,heapsort,ineffective algorithm,javascript,mathematics,merge sort,order theory,php,quicksort,selection sort,slow ineffective algorithm,sort,sorting,sorting algorithms,well known sorting algorithm">
+
+<link rel="canonical" href="./Computer Algorithms_ Bubble Sort_files/Computer Algorithms_ Bubble Sort.html">
+<!-- /all in one seo pack -->
+<link rel="alternate" type="application/rss+xml" title="stoimen&#39;s web log » Feed" href="http://www.stoimen.com/blog/feed/">
+<link rel="alternate" type="application/rss+xml" title="stoimen&#39;s web log » Comments Feed" href="http://www.stoimen.com/blog/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="stoimen&#39;s web log » Computer Algorithms: Bubble Sort Comments Feed" href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/feed/">
+		<script async="" src="./Computer Algorithms_ Bubble Sort_files/analytics.js"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"http:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"wpemoji":"http:\/\/www.stoimen.com\/blog\/wp-includes\/js\/wp-emoji.js?ver=4.4.1","twemoji":"http:\/\/www.stoimen.com\/blog\/wp-includes\/js\/twemoji.js?ver=4.4.1"}};
+			( function( window, document, settings ) {
+	var src, ready;
+
+	/**
+	 * Detect if the browser supports rendering emoji or flag emoji. Flag emoji are a single glyph
+	 * made of two characters, so some browsers (notably, Firefox OS X) don't support them.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param type {String} Whether to test for support of "simple" or "flag" emoji.
+	 * @return {Boolean} True if the browser can render emoji, false if it cannot.
+	 */
+	function browserSupportsEmoji( type ) {
+		var canvas = document.createElement( 'canvas' ),
+			context = canvas.getContext && canvas.getContext( '2d' ),
+			tone;
+
+		if ( ! context || ! context.fillText ) {
+			return false;
+		}
+
+		/*
+		 * Chrome on OS X added native emoji rendering in M41. Unfortunately,
+		 * it doesn't work when the font is bolder than 500 weight. So, we
+		 * check for bold rendering support to avoid invisible emoji in Chrome.
+		 */
+		context.textBaseline = 'top';
+		context.font = '600 32px Arial';
+
+		if ( 'flag' === type ) {
+			/*
+			 * This works because the image will be one of three things:
+			 * - Two empty squares, if the browser doesn't render emoji
+			 * - Two squares with 'A' and 'U' in them, if the browser doesn't render flag emoji
+			 * - The Australian flag
+			 *
+			 * The first two will encode to small images (1-2KB data URLs), the third will encode
+			 * to a larger image (4-5KB data URL).
+			 */
+			context.fillText( String.fromCharCode( 55356, 56806, 55356, 56826 ), 0, 0 );
+			return canvas.toDataURL().length > 3000;
+		} else if ( 'diversity' === type ) {
+			/*
+			 * This tests if the browser supports the Emoji Diversity specification, by rendering an
+			 * emoji with no skin tone specified (in this case, Santa). It then adds a skin tone, and
+			 * compares if the emoji rendering has changed.
+			 */
+			context.fillText( String.fromCharCode( 55356, 57221 ), 0, 0 );
+			tone = context.getImageData( 16, 16, 1, 1 ).data.toString();
+			context.fillText( String.fromCharCode( 55356, 57221, 55356, 57343 ), 0, 0 );
+			// Chrome has issues comparing arrays, so we compare it as a  string, instead.
+			return tone !== context.getImageData( 16, 16, 1, 1 ).data.toString();
+		} else {
+			if ( 'simple' === type ) {
+				/*
+				 * This creates a smiling emoji, and checks to see if there is any image data in the
+				 * center pixel. In browsers that don't support emoji, the character will be rendered
+				 * as an empty square, so the center pixel will be blank.
+				 */
+				context.fillText( String.fromCharCode( 55357, 56835 ), 0, 0 );
+			} else {
+				/*
+				 * To check for Unicode 8 support, let's try rendering the most important advancement
+				 * that the Unicode Consortium have made in years: the burrito.
+				 */
+				context.fillText( String.fromCharCode( 55356, 57135 ), 0, 0 );
+			}
+			return context.getImageData( 16, 16, 1, 1 ).data[0] !== 0;
+		}
+	}
+
+	function addScript( src ) {
+		var script = document.createElement( 'script' );
+
+		script.src = src;
+		script.type = 'text/javascript';
+		document.getElementsByTagName( 'head' )[0].appendChild( script );
+	}
+
+	settings.supports = {
+		simple:    browserSupportsEmoji( 'simple' ),
+		flag:      browserSupportsEmoji( 'flag' ),
+		unicode8:  browserSupportsEmoji( 'unicode8' ),
+		diversity: browserSupportsEmoji( 'diversity' )
+	};
+
+	settings.DOMReady = false;
+	settings.readyCallback = function() {
+		settings.DOMReady = true;
+	};
+
+	if ( ! settings.supports.simple || ! settings.supports.flag || ! settings.supports.unicode8 || ! settings.supports.diversity ) {
+		ready = function() {
+			settings.readyCallback();
+		};
+
+		if ( document.addEventListener ) {
+			document.addEventListener( 'DOMContentLoaded', ready, false );
+			window.addEventListener( 'load', ready, false );
+		} else {
+			window.attachEvent( 'onload', ready );
+			document.attachEvent( 'onreadystatechange', function() {
+				if ( 'complete' === document.readyState ) {
+					settings.readyCallback();
+				}
+			} );
+		}
+
+		src = settings.source || {};
+
+		if ( src.concatemoji ) {
+			addScript( src.concatemoji );
+		} else if ( src.wpemoji && src.twemoji ) {
+			addScript( src.twemoji );
+			addScript( src.wpemoji );
+		}
+	}
+
+} )( window, document, window._wpemojiSettings );
+		</script><style type="text/css"></style><script src="./Computer Algorithms_ Bubble Sort_files/twemoji.js" type="text/javascript"></script><script src="./Computer Algorithms_ Bubble Sort_files/wp-emoji.js" type="text/javascript"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="yarppWidgetCss-css" href="./Computer Algorithms_ Bubble Sort_files/widget.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-syntax-css-css" href="./Computer Algorithms_ Bubble Sort_files/wp-syntax.css" type="text/css" media="all">
+<link rel="stylesheet" id="twentythirteen-fonts-css" href="./Computer Algorithms_ Bubble Sort_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="genericons-css" href="./Computer Algorithms_ Bubble Sort_files/genericons.css" type="text/css" media="all">
+<link rel="stylesheet" id="twentythirteen-style-css" href="./Computer Algorithms_ Bubble Sort_files/style.css" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentythirteen-ie-css'  href='http://www.stoimen.com/blog/wp-content/themes/twentythirteen/css/ie.css?ver=2013-07-18' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/jquery.js"></script>
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/jquery-migrate.js"></script>
+<link rel="https://api.w.org/" href="http://www.stoimen.com/blog/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.stoimen.com/blog/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.stoimen.com/blog/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="jQuery UI Slider IE bugfix" href="http://www.stoimen.com/blog/2012/02/16/jquery-ui-slider-ie-bugfix/">
+<link rel="next" title="Computer Algorithms: Shell Sort" href="http://www.stoimen.com/blog/2012/02/27/computer-algorithms-shell-sort/">
+<meta name="generator" content="WordPress 4.4.1">
+<link rel="shortlink" href="http://www.stoimen.com/blog/?p=2729">
+<link rel="alternate" type="application/json+oembed" href="http://www.stoimen.com/blog/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.stoimen.com%2Fblog%2F2012%2F02%2F20%2Fcomputer-algorithms-bubble-sort%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://www.stoimen.com/blog/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.stoimen.com%2Fblog%2F2012%2F02%2F20%2Fcomputer-algorithms-bubble-sort%2F&amp;format=xml">
+	<style type="text/css" id="twentythirteen-header-css">
+			.site-header {
+			background: url(http://www.stoimen.com/blog/wp-content/themes/twentythirteen/images/headers/circle.png) no-repeat scroll top;
+			background-size: 1600px auto;
+		}
+		@media (max-width: 767px) {
+			.site-header {
+				background-size: 768px auto;
+			}
+		}
+		@media (max-width: 359px) {
+			.site-header {
+				background-size: 360px auto;
+			}
+		}
+		</style>
+	<script type="text/javascript" src="chrome-extension://aadgmnobpdmgmigaicncghmmoeflnamj/ng-inspector.js"></script></head>
+
+<body class="single single-post postid-2729 single-format-standard" data-pinterest-extension-installed="cr1.39.1">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-670359-6', 'auto');
+  ga('send', 'pageview');
+
+</script>
+	<div id="page" class="hfeed site">
+		<header id="masthead" class="site-header" role="banner">
+			<a class="home-link" href="http://www.stoimen.com/blog/" title="stoimen&#39;s web log" rel="home">
+				<h1 class="site-title">stoimen's web log</h1>
+				<h2 class="site-description">on web development</h2>
+			</a>
+
+			<div id="navbar" class="navbar">
+				<nav id="site-navigation" class="navigation main-navigation" role="navigation">
+					<button class="menu-toggle">Menu</button>
+					<a class="screen-reader-text skip-link" href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#content" title="Skip to content">Skip to content</a>
+					<div class="menu-menu-1-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-3594" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-3594"><a href="http://www.stoimen.com/blog/">Home</a></li>
+<li id="menu-item-3595" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3595"><a href="http://www.stoimen.com/blog/about/">About</a></li>
+<li id="menu-item-3596" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3596"><a href="http://www.stoimen.com/blog/download/">Download</a></li>
+<li id="menu-item-3597" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3597"><a href="https://github.com/stoimen/algorithms">Algorithms on GitHub</a></li>
+</ul></div>					<form role="search" method="get" class="search-form" action="http://www.stoimen.com/blog/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search …" value="" name="s" title="Search for:">
+				</label>
+				<input type="submit" class="search-submit" value="Search">
+			</form>				</nav><!-- #site-navigation -->
+			</div><!-- #navbar -->
+		</header><!-- #masthead -->
+
+		<div id="main" class="site-main">
+	<div id="primary" class="content-area">
+		<div id="content" class="site-content" role="main">
+
+						
+				
+<article id="post-2729" class="post-2729 post type-post status-publish format-standard hentry category-algorithms tag-bubble-sort tag-discrete-mathematics tag-dom tag-famous-sorting-algorithm tag-heapsort tag-ineffective-algorithm tag-javascript-on-stoimen-com tag-mathematics tag-merge-sort tag-order-theory tag-php tag-quicksort tag-selection-sort tag-slow-ineffective-algorithm tag-sort tag-sorting tag-sorting-algorithms tag-well-known-sorting-algorithm">
+	<header class="entry-header">
+		
+				<h1 class="entry-title">Computer Algorithms: Bubble Sort</h1>
+		
+		<div class="entry-meta">
+			<span class="date"><a href="./Computer Algorithms_ Bubble Sort_files/Computer Algorithms_ Bubble Sort.html" title="Permalink to Computer Algorithms: Bubble Sort" rel="bookmark"><time class="entry-date" datetime="2012-02-20T16:33:08+00:00">February 20, 2012</time></a></span><span class="categories-links"><a href="http://www.stoimen.com/blog/category/algorithms/" rel="category tag">algorithms</a></span><span class="tags-links"><a href="http://www.stoimen.com/blog/tag/bubble-sort/" rel="tag">Bubble sort</a>, <a href="http://www.stoimen.com/blog/tag/discrete-mathematics/" rel="tag">Discrete mathematics</a>, <a href="http://www.stoimen.com/blog/tag/dom/" rel="tag">DOM</a>, <a href="http://www.stoimen.com/blog/tag/famous-sorting-algorithm/" rel="tag">famous sorting algorithm</a>, <a href="http://www.stoimen.com/blog/tag/heapsort/" rel="tag">Heapsort</a>, <a href="http://www.stoimen.com/blog/tag/ineffective-algorithm/" rel="tag">ineffective algorithm</a>, <a href="http://www.stoimen.com/blog/tag/javascript-on-stoimen-com/" rel="tag">javascript</a>, <a href="http://www.stoimen.com/blog/tag/mathematics/" rel="tag">Mathematics</a>, <a href="http://www.stoimen.com/blog/tag/merge-sort/" rel="tag">Merge sort</a>, <a href="http://www.stoimen.com/blog/tag/order-theory/" rel="tag">Order theory</a>, <a href="http://www.stoimen.com/blog/tag/php/" rel="tag">PHP</a>, <a href="http://www.stoimen.com/blog/tag/quicksort/" rel="tag">Quicksort</a>, <a href="http://www.stoimen.com/blog/tag/selection-sort/" rel="tag">Selection sort</a>, <a href="http://www.stoimen.com/blog/tag/slow-ineffective-algorithm/" rel="tag">slow ineffective algorithm</a>, <a href="http://www.stoimen.com/blog/tag/sort/" rel="tag">Sort</a>, <a href="http://www.stoimen.com/blog/tag/sorting/" rel="tag">Sorting</a>, <a href="http://www.stoimen.com/blog/tag/sorting-algorithms/" rel="tag">Sorting algorithms</a>, <a href="http://www.stoimen.com/blog/tag/well-known-sorting-algorithm/" rel="tag">well known sorting algorithm</a></span><span class="author vcard"><a class="url fn n" href="http://www.stoimen.com/blog/author/admin/" title="View all posts by Stoimen" rel="author">Stoimen</a></span>					</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+		<div class="entry-content">
+		<h2>Overview</h2>
+<p>It’s weird that bubble sort is the most famous sorting algorithm in practice since it is one of the worst approaches for data sorting. Why is bubble sort so famous? Perhaps because of its exotic name or because it is so easy to implement. First let’s take a look on its nature.</p>
+<p>Bubble sort consists of comparing each pair of adjacent items. Then one of those two items is considered smaller (lighter) and if the lighter element is on the right side of its neighbour, they swap places. Thus the lightest element bubbles to the surface and at the end of each iteration it appears on the top. I’ll try to explain this simple principle with some pictures.</p>
+<h3>1. Each two adjacent elements are compared</h3>
+<figure id="attachment_2736" style="width: 962px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep1CompareTwoElements1.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep1CompareTwoElements1.png" alt="In bubble sort we&#39;ve to compare each two adjacent elements" title="BubbleSortStep1CompareTwoElements" width="962" height="250" class="size-full wp-image-2736"></a><figcaption class="wp-caption-text">In bubble sort we've to compare each two adjacent elements</figcaption></figure>
+<p>Here “2” appears to be less than “4”, so it is considered lighter and it continues to bubble to the surface (the front of the array).<br>
+<span id="more-2729"></span></p>
+<h3>2. Swap with heavier elements</h3>
+<figure id="attachment_2738" style="width: 962px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep2AnElementStartstoBubble.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep2AnElementStartstoBubble.png" alt="If heavier elements appear on the way we should swap them" title="BubbleSortStep2AnElementStartstoBubble" width="962" height="241" class="size-full wp-image-2738" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep2AnElementStartstoBubble-300x75.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep2AnElementStartstoBubble.png 962w" sizes="(max-width: 962px) 100vw, 962px"></a><figcaption class="wp-caption-text">If heavier elements appear on the way we should swap them</figcaption></figure>
+<p>On his way to the surface the currently lightest item meets a heavier element. Then they swap places.</p>
+<h3>3. Move forward and swap with each heavier item</h3>
+<figure id="attachment_2740" style="width: 963px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep3ALighterElementStartstoBubble.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep3ALighterElementStartstoBubble.png" alt="Swapping is slow and that is the main reason not to use bubble sort" title="BubbleSortStep3ALighterElementStartstoBubble" width="963" height="377" class="size-full wp-image-2740" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep3ALighterElementStartstoBubble-300x117.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep3ALighterElementStartstoBubble.png 963w" sizes="(max-width: 963px) 100vw, 963px"></a><figcaption class="wp-caption-text">Swapping is slow and that is the main reason not to use bubble sort</figcaption></figure>
+<p>The problem with bubble sort is that you may have to swap a lot of elements.</p>
+<h3>4. If there is a lighter element, then this item begins to bubble to the surface</h3>
+<figure id="attachment_2741" style="width: 959px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep4ALighterElementStartstoBubble.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep4ALighterElementStartstoBubble.png" alt="We can be sure that on each step the algorithm bubbles the lightest element so far" title="BubbleSortStep4ALighterElementStartstoBubble" width="959" height="180" class="size-full wp-image-2741" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep4ALighterElementStartstoBubble-300x56.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep4ALighterElementStartstoBubble.png 959w" sizes="(max-width: 959px) 100vw, 959px"></a><figcaption class="wp-caption-text">We can be sure that on each step the algorithm bubbles the lightest element so far</figcaption></figure>
+<p>If the currently lightest element meets another item that is lighter, then the newest currently lightest element starts to bubble to the top.</p>
+<h3>5. Finally the lightest element is on its place</h3>
+<figure id="attachment_2742" style="width: 959px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep5Themostlightelementisonitsplace.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStep5Themostlightelementisonitsplace.png" alt="Finally the list begins to look sorted" title="BubbleSortStep5Themostlightelementisonitsplace" width="959" height="180" class="size-full wp-image-2742" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep5Themostlightelementisonitsplace-300x56.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStep5Themostlightelementisonitsplace.png 959w" sizes="(max-width: 959px) 100vw, 959px"></a><figcaption class="wp-caption-text">Finally the list begins to look sorted</figcaption></figure>
+<p>At the end of each iteration we can be sure that the lightest element is on the right place – at the beginning of the list.</p>
+<p>The problem is that this algorithm needs a tremendous number of comaprisons and as we know already this can be slow.</p>
+<p><iframe src="./Computer Algorithms_ Bubble Sort_files/embed.html" frameborder="0" width="525" height="420"></iframe></p>
+<p>We can easily see how ineffective bubble sort is. Now the question remains – why is it so famous? Maybe indeed the answer lies in the simplicity of its implementation. Let’s see how to implement bubble sort.</p>
+<h2>Implementation</h2>
+<p>Implementing bubble sort is easy. The question is how easy? Well, obviously after understanding the principles of this algorithm every developer, even a beginner, can implement it. Here’s a PHP implementation of bubble sort.</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="php" style="font-family:monospace;"><span style="color: #000088;">$input</span> <span style="color: #339933;">=</span> <span style="color: #990000;">array</span><span style="color: #009900;">(</span><span style="color: #cc66cc;">6</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">5</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">3</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">8</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">7</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span> <span style="color: #cc66cc;">4</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">function</span> bubble_sort<span style="color: #009900;">(</span><span style="color: #000088;">$arr</span><span style="color: #009900;">)</span>
+<span style="color: #009900;">{</span>
+	<span style="color: #000088;">$length</span> <span style="color: #339933;">=</span> <span style="color: #990000;">count</span><span style="color: #009900;">(</span><span style="color: #000088;">$arr</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+	<span style="color: #b1b100;">for</span> <span style="color: #009900;">(</span><span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <span style="color: #000088;">$length</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+		<span style="color: #b1b100;">for</span> <span style="color: #009900;">(</span><span style="color: #000088;">$j</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$length</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">;</span> <span style="color: #000088;">$j</span> <span style="color: #339933;">&gt;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">;</span> <span style="color: #000088;">$j</span><span style="color: #339933;">--</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+			<span style="color: #b1b100;">if</span> <span style="color: #009900;">(</span><span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #009900;">]</span> <span style="color: #339933;">&lt;</span> <span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">]</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+				<span style="color: #000088;">$t</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+				<span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+				<span style="color: #000088;">$arr</span><span style="color: #009900;">[</span><span style="color: #000088;">$j</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$t</span><span style="color: #339933;">;</span>
+			<span style="color: #009900;">}</span>
+		<span style="color: #009900;">}</span>
+	<span style="color: #009900;">}</span>
+&nbsp;
+	<span style="color: #b1b100;">return</span> <span style="color: #000088;">$arr</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// 1, 2, 3, 4, 5, 6, 7, 8</span>
+<span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> bubble_sort<span style="color: #009900;">(</span><span style="color: #000088;">$input</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span></pre></td></tr></tbody></table></div>
+
+<p>Clearly the implementation consists of few lines of code and two nested loops.</p>
+<h2>Complexity: Where’s Bubble Sort Compared to Other Sorting Algorithms</h2>
+<p>Compared to other sorting algorithm, bubble sort is really slow. Indeed the complexity of this algoritm is O(n<sup>2</sup>) which can’t be worse. It’s weird that the most well known sorting algorithm is the slowest one.</p>
+<figure id="attachment_2758" style="width: 600px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortComparedToOthers.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortComparedToOthers.png" alt="Bubble sort compared to quicksort, merge sort and heapsort in the average case" title="BubbleSortComparedToOthers" width="600" height="371" class="size-full wp-image-2758" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortComparedToOthers-300x185.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortComparedToOthers.png 600w" sizes="(max-width: 600px) 100vw, 600px"></a><figcaption class="wp-caption-text">Bubble sort compared to quicksort, merge sort and heapsort in the average case</figcaption></figure>
+<p>Even for small values of n, the number of comparisons and swaps can be tremendous.</p>
+<figure id="attachment_2751" style="width: 1082px" class="wp-caption alignnone"><a href="./Computer Algorithms_ Bubble Sort_files/BubbleSortStats-2.png"><img src="./Computer Algorithms_ Bubble Sort_files/BubbleSortStats-2.png" alt="stats" title="Bubble sort is three times slower than quicksort even for n = 100, but it&#39;s easier to impelemnt" width="1082" height="654" class="size-full wp-image-2751" srcset="http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStats-2-300x181.png 300w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStats-2-1024x618.png 1024w, http://www.stoimen.com/blog/wp-content/uploads/2012/02/BubbleSortStats-2.png 1082w" sizes="(max-width: 1082px) 100vw, 1082px"></a><figcaption class="wp-caption-text">Bubble sort is three times slower than quicksort even for n = 100, but it's easier to impelemnt</figcaption></figure>
+<p>Another problem is that most of the languages (libraries) have built-in sorting functions, that they don’t make use of bubble sort and are faster for sure. So why a developer should implement bubble sort at all?</p>
+<h2>Application: 3 Cool Reasons To Use Bubble Sort</h2>
+<p>We saw that bubble sort is slow and ineffective, yet it is used in practice. Why? Is there any reason to use this slow, ineffective algorithm with weird name? Yes and here are some of them that might be helpful for any developer.</p>
+<h3>1. It is easy to implement</h3>
+<p>Definitely bubble sort is easier to implement than other “complex” sorting algorithms as quicksort. Bubble sort is easy to remember and easy to code and that’s great instead of learning and remembering tons of code.</p>
+<h3>2. Because the library can’t help</h3>
+<p>Let’s say you work with JavaScript. Great, there you get array.sort() which can help for this: [3, 1, 2].sort(). But what would happen if you’d rather like to sort more “complex” structures like … some DOM nodes. Here we have three LI nodes and we want to sort them in some order. Obviously you can’t compare them with the “&lt;" operator, so we've to come up with some custom solution.
+
+
+
+</p><div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="html4strict" style="font-family:monospace;"><span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">a</span> <span style="color: #000066;">href</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"#"</span>&gt;</span>Click here to sort the list<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">a</span>&gt;</span>
+&nbsp;
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">li</span>&gt;</span>node 3<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">li</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">li</span>&gt;</span>node 1<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">li</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">li</span>&gt;</span>node 2<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">li</span>&gt;</span></pre></td></tr></tbody></table></div>
+
+<p>Here sort() can’t help us and we’ve to code our own function. However we have only few elements (three in our case). Why not using bubble sort?</p>
+<h3>3. The list is almost sorted</h3>
+<p>One of the problems with bubble sort is that it consists of too much swapping, but what if we know that the list is almost sorted?</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="javascript" style="font-family:monospace;"><span style="color: #006600; font-style: italic;">// almost sorted</span>
+<span style="color: #009900;">[</span><span style="color: #CC0000;">1</span><span style="color: #339933;">,</span> <span style="color: #CC0000;">2</span><span style="color: #339933;">,</span> <span style="color: #CC0000;">4</span><span style="color: #339933;">,</span> <span style="color: #CC0000;">3</span><span style="color: #339933;">,</span> <span style="color: #CC0000;">5</span><span style="color: #009900;">]</span></pre></td></tr></tbody></table></div>
+
+<p>We have to swap only 3 with 4. </p>
+<p>Note that in the best case bubble sort’s complexity is O(n) – faster than quicksort’s best case!</p>
+<div class="yarpp-related">
+<p><a href="http://www.codeproject.com/script/Articles/BlogFeedList.aspx?amid=3166682" rel="tag" style="display:none">CodeProject</a></p><p>Related posts:</p><ol>
+<li><a href="http://www.stoimen.com/blog/2010/07/09/friday-algorithms-javascript-bubble-sort/" rel="bookmark" title="Friday Algorithms: JavaScript Bubble Sort">Friday Algorithms: JavaScript Bubble Sort </a></li>
+<li><a href="http://www.stoimen.com/blog/2012/02/27/computer-algorithms-shell-sort/" rel="bookmark" title="Computer Algorithms: Shell Sort">Computer Algorithms: Shell Sort </a></li>
+<li><a href="http://www.stoimen.com/blog/2012/02/13/computer-algorithms-insertion-sort/" rel="bookmark" title="Computer Algorithms: Insertion Sort">Computer Algorithms: Insertion Sort </a></li>
+<li><a href="http://www.stoimen.com/blog/2012/03/19/computer-algorithms-radix-sort/" rel="bookmark" title="Computer Algorithms: Radix Sort">Computer Algorithms: Radix Sort </a></li>
+<li><a href="http://www.stoimen.com/blog/2012/03/05/computer-algorithms-merge-sort/" rel="bookmark" title="Computer Algorithms: Merge Sort">Computer Algorithms: Merge Sort </a></li>
+</ol>
+</div>
+	</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+		
+			</footer><!-- .entry-meta -->
+</article><!-- #post -->
+					<nav class="navigation post-navigation" role="navigation">
+		<h1 class="screen-reader-text">Post navigation</h1>
+		<div class="nav-links">
+
+			<a href="http://www.stoimen.com/blog/2012/02/16/jquery-ui-slider-ie-bugfix/" rel="prev"><span class="meta-nav">←</span> jQuery UI Slider IE bugfix</a>			<a href="http://www.stoimen.com/blog/2012/02/27/computer-algorithms-shell-sort/" rel="next">Computer Algorithms: Shell Sort <span class="meta-nav">→</span></a>
+		</div><!-- .nav-links -->
+	</nav><!-- .navigation -->
+					
+<div id="comments" class="comments-area">
+
+			<h2 class="comments-title">
+			6 thoughts on “<span>Computer Algorithms: Bubble Sort</span>”		</h2>
+
+		<ol class="comment-list">
+					<li id="comment-15145" class="comment even thread-even depth-1">
+			<article id="div-comment-15145" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/ace9eee5d760ec18208284dd7d7f8bd6" srcset="http://1.gravatar.com/avatar/ace9eee5d760ec18208284dd7d7f8bd6?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn">adele</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-15145">
+							<time datetime="2012-02-22T18:26:35+00:00">
+								February 22, 2012 at 6:26 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Great article, Stoimen! As always!</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-15146" class="comment byuser comment-author-admin bypostauthor odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-15146" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/f8ec9e5a6adce849e7ecbc7024444697" srcset="http://0.gravatar.com/avatar/f8ec9e5a6adce849e7ecbc7024444697?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn"><a href="http://stoimen.com/" rel="external nofollow" class="url">Stoimen</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-15146">
+							<time datetime="2012-02-22T18:27:41+00:00">
+								February 22, 2012 at 6:27 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks, Adele!</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-15179" class="comment even thread-even depth-1">
+			<article id="div-comment-15179" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/6e47a757f32380c06e53a8be50d39f76" srcset="http://0.gravatar.com/avatar/6e47a757f32380c06e53a8be50d39f76?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn">Pablo</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-15179">
+							<time datetime="2012-03-01T00:05:52+00:00">
+								March 1, 2012 at 12:05 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>The reason # 2 is false. In all programming languages I know (including JavaScript) the built-in sort function provides a way to pass in a custom function to decide if an item is smaller than other without change the underlying sorting algorithm.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-15973" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-15973" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/97de539cfaad901816d7b4db3a97eb70" srcset="http://0.gravatar.com/avatar/97de539cfaad901816d7b4db3a97eb70?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn"><a href="http://a/" rel="external nofollow" class="url">arjun</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-15973">
+							<time datetime="2012-06-11T09:31:42+00:00">
+								June 11, 2012 at 9:31 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>nice , explanation !!!<br>
+but provide a general algorithms to understand better &gt;&gt;&gt;</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-18547" class="comment even thread-even depth-1">
+			<article id="div-comment-18547" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/5265c8a0eeff2b3735b7826d2260965e" srcset="http://2.gravatar.com/avatar/5265c8a0eeff2b3735b7826d2260965e?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn">jbabe</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-18547">
+							<time datetime="2013-03-11T14:21:08+00:00">
+								March 11, 2013 at 2:21 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>tnx sa info na ‘to. it helps me sa’king project</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-19241" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-19241" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt="" src="./Computer Algorithms_ Bubble Sort_files/d9c7dc2eb31487a54cd3d2737c1147dc" srcset="http://1.gravatar.com/avatar/d9c7dc2eb31487a54cd3d2737c1147dc?s=148&amp;d=mm&amp;r=g 2x" class="avatar avatar-74 photo" height="74" width="74">						<b class="fn">Siyuan</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#comment-19241">
+							<time datetime="2013-08-29T10:51:12+00:00">
+								August 29, 2013 at 10:51 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Your implementation in the best case is still O(n^2), although no swaps is needed.<br>
+function bubble_sort($arr)<br>
+{<br>
+	$length = count($arr);</p>
+<p>	for ($i = 0; $i  $i; $j–) {<br>
+			if ($arr[$j] &lt; $arr[$j-1]) {<br>
+				$t = $arr[$j];<br>
+				$arr[$j] = $arr[$j-1];<br>
+				$arr[$j-1] = $t;<br>
+                                $swapped = true;<br>
+			}<br>
+		}<br>
+                if ($swapped == false)<br>
+                       break;<br>
+	}</p>
+<p>	return $arr;<br>
+}</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+		
+	
+					<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.stoimen.com/blog/2012/02/20/computer-algorithms-bubble-sort/#respond" style="display:none;">Cancel reply</a></small></h3>				<form action="http://www.stoimen.com/blog/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate="">
+					<p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" aria-required="true" required="required"></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="email" value="" size="30" aria-describedby="email-notes" aria-required="true" required="required"></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="url" value="" size="30"></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="2729" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="ee7799d0e1"></p><p style="display: none;"></p>				<input type="hidden" id="ak_js" name="ak_js" value="1453767882131"></form>
+					</div><!-- #respond -->
+		
+</div><!-- #comments -->
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+
+		</div><!-- #main -->
+		<footer id="colophon" class="site-footer" role="contentinfo">
+				<div id="secondary" class="sidebar-container" role="complementary">
+		<div class="widget-area masonry" style="position: relative; height: 688px;">
+			<aside id="search-2" class="widget widget_search masonry-brick" style="position: absolute; left: 0px; top: 0px;"><form role="search" method="get" class="search-form" action="http://www.stoimen.com/blog/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search …" value="" name="s" title="Search for:">
+				</label>
+				<input type="submit" class="search-submit" value="Search">
+			</form></aside><aside id="yarpp_widget-3" class="widget widget_yarpp_widget masonry-brick" style="position: absolute; left: 265px; top: 0px;"><h3 class="widget-title">Related Posts</h3><div class="yarpp-related-widget">
+<ol><li><a href="http://www.stoimen.com/blog/2010/07/09/friday-algorithms-javascript-bubble-sort/" rel="bookmark">Friday Algorithms: JavaScript Bubble Sort</a></li><li><a href="http://www.stoimen.com/blog/2012/02/27/computer-algorithms-shell-sort/" rel="bookmark">Computer Algorithms: Shell Sort</a></li><li><a href="http://www.stoimen.com/blog/2012/02/13/computer-algorithms-insertion-sort/" rel="bookmark">Computer Algorithms: Insertion Sort</a></li><li><a href="http://www.stoimen.com/blog/2012/03/19/computer-algorithms-radix-sort/" rel="bookmark">Computer Algorithms: Radix Sort</a></li><li><a href="http://www.stoimen.com/blog/2012/03/05/computer-algorithms-merge-sort/" rel="bookmark">Computer Algorithms: Merge Sort</a></li></ol>
+</div>
+</aside><aside id="categories-3" class="widget widget_categories masonry-brick" style="position: absolute; left: 530px; top: 0px;"><h3 class="widget-title">Categories</h3>		<ul>
+	<li class="cat-item cat-item-834"><a href="http://www.stoimen.com/blog/category/agile/" title="All about agile software development">agile</a> (3)
+</li>
+	<li class="cat-item cat-item-886"><a href="http://www.stoimen.com/blog/category/algorithms/" title="A process or set of rules to be followed in calculations or other problem-solving operations, esp. by a computer.">algorithms</a> (62)
+</li>
+	<li class="cat-item cat-item-1251"><a href="http://www.stoimen.com/blog/category/cheatsheets/">cheatsheets</a> (2)
+</li>
+	<li class="cat-item cat-item-24"><a href="http://www.stoimen.com/blog/category/css/">css</a> (29)
+</li>
+	<li class="cat-item cat-item-1336"><a href="http://www.stoimen.com/blog/category/data-structures-2/" title="A data structure is a particular way of storing and organizing data in a computer so that it can be used efficiently.">data structures</a> (22)
+</li>
+	<li class="cat-item cat-item-108"><a href="http://www.stoimen.com/blog/category/download/" title="You can download different chunks of code and custom components here.">download</a> (3)
+</li>
+	<li class="cat-item cat-item-1487"><a href="http://www.stoimen.com/blog/category/algorithms/dynamic-programming/">dynamic programming</a> (1)
+</li>
+	<li class="cat-item cat-item-38"><a href="http://www.stoimen.com/blog/category/featured/">featured</a> (46)
+</li>
+	<li class="cat-item cat-item-50"><a href="http://www.stoimen.com/blog/category/flex-3/">flex 3</a> (25)
+</li>
+	<li class="cat-item cat-item-1420"><a href="http://www.stoimen.com/blog/category/graphs/">Graphs</a> (10)
+</li>
+	<li class="cat-item cat-item-123"><a href="http://www.stoimen.com/blog/category/javascript-on-stoimen-com/">javascript</a> (143)
+</li>
+	<li class="cat-item cat-item-174"><a href="http://www.stoimen.com/blog/category/micro-tutorial/">micro tutorial</a> (204)
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.stoimen.com/blog/category/php/">PHP</a> (114)
+</li>
+	<li class="cat-item cat-item-37"><a href="http://www.stoimen.com/blog/category/what-i-make/">portfolio</a> (5)
+</li>
+	<li class="cat-item cat-item-573"><a href="http://www.stoimen.com/blog/category/quiz/">quiz</a> (7)
+</li>
+	<li class="cat-item cat-item-631"><a href="http://www.stoimen.com/blog/category/snippets/">snippets</a> (7)
+</li>
+	<li class="cat-item cat-item-131"><a href="http://www.stoimen.com/blog/category/tech-related-videos/">video</a> (1)
+</li>
+	<li class="cat-item cat-item-12"><a href="http://www.stoimen.com/blog/category/web-development/">web development</a> (169)
+</li>
+	<li class="cat-item cat-item-39"><a href="http://www.stoimen.com/blog/category/zend-framework-on-stoimen-com/" title="Extending the art &amp; spirit of PHP, Zend Framework is based on simplicity, object-oriented best practices, corporate friendly licensing, and a rigorously tested agile codebase. Zend Framework is focused on building more secure, reliable, and modern Web 2.0 applications &amp; web services, and consuming widely available APIs from leading vendors like Google, Amazon, Yahoo!, Flickr, as well as API providers and cataloguers like StrikeIron and ProgrammableWeb.">zend framework</a> (82)
+</li>
+		</ul>
+</aside>		</div><!-- .widget-area -->
+	</div><!-- #secondary -->
+
+			<div class="site-info">
+								<a href="http://wordpress.org/" title="Semantic Personal Publishing Platform">Proudly powered by WordPress</a>
+			</div><!-- .site-info -->
+		</footer><!-- #colophon -->
+	</div><!-- #page -->
+
+	<!-- Powered by WPtouch: 4.0.2 --><script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/form.js"></script>
+<link rel="stylesheet" id="yarppRelatedCss-css" href="./Computer Algorithms_ Bubble Sort_files/related.css" type="text/css" media="all">
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/masonry.min.js"></script>
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/functions.js"></script>
+<script type="text/javascript" src="./Computer Algorithms_ Bubble Sort_files/wp-embed.js"></script>
+
+<span style="height: 20px; width: 40px; position: absolute; opacity: 1; z-index: 8675309; display: none; cursor: pointer; border: none; top: 1601px; left: 510px; background-image: url(&quot;data:image/png;base64,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&quot;); background-color: transparent; background-size: 40px 20px;"></span><script id="hiddenlpsubmitdiv" style="display: none;"></script><script>try{(function() { for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; if (typeof(lastpass_f.lpsubmitorig2)=='object'){ continue;}lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); if (d) {for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ if (typeof(d.innerText) != 'undefined') { d.innerText=i.toString(); } else { d.textContent=i.toString(); } } } d.dispatchEvent(customEvent); }form.lpsubmitorig2(); } } }})()}catch(e){}</script></body></html>
