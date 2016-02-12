@@ -1,0 +1,1 @@
+ Merge sort divides the array in half, sorts each of those halves,& then merges them back together. Each of those halves has the same sorting algorithm applied to it. Eventully, you are merging just two single element arrays. It's the 'merge' part that does all the heavy lifting.
