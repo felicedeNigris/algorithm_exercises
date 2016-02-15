@@ -8,13 +8,11 @@ console.log(merge_lists(my_list, alices_list))
 */
 
 var list = [3,4,6,10,11,15]
-var list2 = [1,5,8,12,14,19]
+var list2 = [1,5,8,12,14]
 
 function merge_lists(list,list2){
   //make output list
   var mergedlist = []
-
-
 
   //length of the loop
   var loopdur = list.length + list2.length
@@ -23,12 +21,13 @@ function merge_lists(list,list2){
     //beginning of lists
     var head_of_list = list[0]
     var head_of_list2 = list2[0]
-
-    if(head_of_list < head_of_list2){
+    //if list1 < list2 & while list1 isn't undefined(or not contain a value) push list1 value
+    if(head_of_list < head_of_list2 && head_of_list !== undefined){
       var temp = list.shift()
       mergedlist.push(temp)
     }
-    else{
+    //if list2 < list1 & while list2 isn't undefined(or not contain a value) push list2 value
+    else if(head_of_list2 < head_of_list && head_of_list2 !== undefined){
       var temp2 = list2.shift()
       mergedlist.push(temp2)
     }
